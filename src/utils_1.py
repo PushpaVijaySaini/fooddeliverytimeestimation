@@ -4,9 +4,34 @@ import pickle
 import numpy as np 
 import pandas as pd
 from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error
-
+import math
 from src.exception_1 import CustomException
 from src.logger_1 import logging
+
+def deg2rad(deg): 
+    try:
+        return deg * (math.pi/180)
+    except Exception as e:
+        logging.info('Exception occured while converting points from Degree to radian')
+        raise CustomException(e, sys)
+
+
+
+def getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2):
+    try:
+        
+        R = 6371  #Radius of the earth in km
+        dLat = deg2rad(lat2-lat1)  #// deg2rad below
+        dLon = deg2rad(lon2-lon1)
+     
+        a= math.sin(dLat/2) * math.sin(dLat/2) + math.cos(deg2rad(lat1)) * math.cos(deg2rad(lat2)) * math.sin(dLon/2) * math.sin(dLon/2)
+    
+        c = 2 * math.atan2(math.sqrt(a), math.sqrt(1-a))
+        d = R * c; # Distance in km
+        return d;
+    except Exception as e:
+        logging.info('Exception occured while calculating the distance')
+        raise CustomException(e, sys)
 
 def save_object(file_path, obj):
     try:
